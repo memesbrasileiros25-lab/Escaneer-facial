@@ -1,0 +1,28 @@
+javascriptavascriptavascriptavascriptavascriptavascriptavascriptavascriptavascript
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// Acessar a câmera
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    video.srcObject = stream;
+
+    // Captura automática após 3 segundos
+    setTimeout(() => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      video.pause();
+      video.srcObject.getTracks().forEach(track => track.stop());
+      showNotification();
+    }, 3000);
+  })
+  .catch(err => {
+    alert('Erro ao acessar a câmera: ' + err);
+  });
+
+// Notificação
+function showNotification() {
+  if (Notification.permission === 'granted') {
+    new Notification('Seu rosto foi escaneado e enviado com sucesso.');
+  } else if (Notification.permission !== 'denied') {
+
